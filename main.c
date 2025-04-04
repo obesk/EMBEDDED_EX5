@@ -13,7 +13,7 @@
 #define CS_GYR PORTBbits.RB4
 #define CS_MAG PORTDbits.RD6
 
-#define MAX_INT_LEN 2
+#define MAX_INT_LEN 3
 
 unsigned int spi_write(unsigned int data) {
     
@@ -105,21 +105,31 @@ int main(void) {
     
     tmr_wait_ms(TIMER1, 3); //TODO: TO REMOVE
     
-    U1TXREG = 'C';
-    spi_write(0x40 | 0x80);
-    unsigned int chip_id = spi_write(0x00);
-       
-    tmr_wait_ms(TIMER1, 3); //TODO: TO REMOVE
+    
+    while (1) {
+        spi_write(0x42 | 0x80);
+        unsigned int mag_x_axis = (spi_write(0x00) & 0x00F8) | (spi_write(0x00) << 8);
 
-    U1TXREG = 'D';
-    U1TXREG = '\n';
-    
-    tmr_wait_ms(TIMER1, 3); //TODO: TO REMOVE
-    print_int_to_uart(chip_id);
-    
-    U1TXREG = '\n';
-    
-    while(1);
-    
+        tmr_wait_ms(TIMER1, 3); //TODO: TO REMOVE
+
+        U1TXREG = '$';
+        U1TXREG = 'M';
+        U1TXREG = 'A';
+        U1TXREG = 'G';
+        U1TXREG = 'X';
+        
+        tmr_wait_ms(TIMER1, 3);
+        U1TXREG = '=';
+        
+        tmr_wait_ms(TIMER1, 3);
+        print_int_to_uart(mag_x_axis);
+        tmr_wait_ms(TIMER1, 3);
+
+        U1TXREG = '*';
+       
+        U1TXREG = '\n';
+        tmr_wait_ms(TIMER1, 10);
+    }
+       
     return 0;
 }

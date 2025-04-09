@@ -14,8 +14,6 @@ unsigned int spi_write(unsigned int data) {
 
 void init_spi() {
 
-    ANSELA = ANSELB = ANSELC = ANSELD = ANSELE = ANSELG = 0x0000;
-
     SPI1CON1bits.MSTEN = 1; // master mode 
     SPI1CON1bits.MODE16 = 0; // 8-bit mode 
     SPI1CON1bits.PPRE = 3; // 1:1 primary prescaler
@@ -32,7 +30,7 @@ void init_spi() {
     RPINR20bits.SDI1R = 0b0010001; // MISO (SDI1) - RPI17
     RPOR12bits.RP109R = 0b000101;// MOSI (SDO1) - RF13;
     RPOR11bits.RP108R = 0b000110; // SCK1;
-        
-    SPI1STATbits.SPIEN = 1; // enable SPI
+      
     SPI1CON1bits.CKP = 1; // Set clock idle state to high
+    SPI1STATbits.SPIEN = 1; // enable SPI
 }

@@ -13,6 +13,9 @@
 #include "xc.h"
 
 int main(void) {
+
+    ANSELA = ANSELB = ANSELC = ANSELD = ANSELE = ANSELG = 0x0000;
+
     init_uart();
     init_spi();
     
@@ -60,6 +63,7 @@ int main(void) {
             unsigned int mag_x_axis = (spi_write(0x00) & 0x00F8) | (spi_write(0x00) << 8);
             CS_MAG = 1;
 
+            //TODO: Convert the uint in signed 
             sprintf(output_buff, "$MAGX=%d*", mag_x_axis);
             print_to_uart(output_buff);
             tmr_wait_ms(TIMER1, 100);

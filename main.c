@@ -60,10 +60,10 @@ int main(void) {
 
             CS_MAG = 0;
             spi_write(0x42 | 0x80);
-            unsigned int mag_x_axis = (spi_write(0x00) & 0x00F8) | (spi_write(0x00) << 8);
+            int mag_x_axis = (spi_write(0x00) & 0x00F8) | (spi_write(0x00) << 8);
             CS_MAG = 1;
 
-            //TODO: Convert the uint in signed 
+            mag_x_axis = mag_x_axis >> 3; 
             sprintf(output_buff, "$MAGX=%d*", mag_x_axis);
             print_to_uart(output_buff);
             tmr_wait_ms(TIMER1, 100);
